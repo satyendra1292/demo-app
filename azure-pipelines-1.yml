@@ -1,38 +1,112 @@
-version: "3.9"
+trigger:
+- main
 
-services:
-  app:
-    image: your-dockerhub-username/app:latest
-    container_name: app
-    restart: unless-stopped
-    environment:
-      NODE_ENV: production
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_USER: appuser
-      DB_PASSWORD: strongpassword
-      DB_NAME: appdb
-    depends_on:
-      - db
-    networks:
-      - backend
+pool:
+  vmImage: ubuntu-latest
 
-  db:
-    image: mysql:8.0
-    container_name: mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: appdb
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: strongpassword
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - backend
+steps:
+- script: |
+    mkdir -p $(Build.ArtifactStagingDirectory)
 
-volumes:
-  mysql_data:
+    cat > $(Build.ArtifactStagingDirectory)/index.html << 'EOF'
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Welcome Sattu VM</title>
+      <style>
+        *{
+          margin:0;
+          padding:0;
+          box-sizing:border-box;
+          font-family:Arial,sans-serif;
+        }
 
-networks:
-  backend:
+        body{
+          background:linear-gradient(135deg,#0f172a,#1e293b,#2563eb);
+          color:white;
+          min-height:100vh;
+        }
+
+        .hero{
+          text-align:center;
+          padding:120px 20px;
+        }
+
+        .hero h1{
+          font-size:4rem;
+          margin-bottom:20px;
+        }
+
+        .hero p{
+          font-size:1.3rem;
+          opacity:0.9;
+        }
+
+        .cards{
+          display:flex;
+          justify-content:center;
+          gap:25px;
+          flex-wrap:wrap;
+          padding:40px;
+        }
+
+        .card{
+          width:300px;
+          background:rgba(255,255,255,0.1);
+          backdrop-filter:blur(10px);
+          padding:25px;
+          border-radius:15px;
+          transition:.3s;
+        }
+
+        .card:hover{
+          transform:translateY(-10px);
+        }
+
+        .card h3{
+          margin-bottom:15px;
+        }
+
+        footer{
+          text-align:center;
+          padding:30px;
+          opacity:0.8;
+        }
+      </style>
+    </head>
+    <body>
+
+      <div class="hero">
+        <h1>🚀 Welcome Sattu VM</h1>
+        <p>Azure DevOps CI/CD Pipeline Successfully Deployed</p>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>⚡ Azure DevOps</h3>
+          <p>Automated CI/CD deployment pipeline configured successfully.</p>
+        </div>
+
+        <div class="card">
+          <h3>🌐 Nginx Server</h3>
+          <p>High-performance web server serving your application.</p>
+        </div>
+
+        <div class="card">
+          <h3>☁ Azure VM</h3>
+          <p>Running live on Microsoft Azure Infrastructure.</p>
+        </div>
+      </div>
+
+      <footer>
+        © 2026 Sattu Cloud Platform | Powered by Azure & Nginx
+      </footer>
+
+    </body>
+    </html>
+    EOF
+
+    sudo cp $(Build.ArtifactStagingDirectory)/index.html /var/www/html/index.html
+  displayName: "Deploy HTML Website"
