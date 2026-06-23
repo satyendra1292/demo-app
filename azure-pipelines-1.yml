@@ -5,11 +5,9 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-
 - stage: Deploy
   jobs:
   - deployment: DeployToVM
-
     environment:
       name: prod-vm
       resourceName: vmnew
@@ -19,6 +17,7 @@ stages:
       runOnce:
         deploy:
           steps:
-
           - script: |
-              echo "<h1>Hello from Azure DevOps
+              echo '<h1>Hello from Azure DevOps VM Deployment</h1>' | sudo tee /var/www/html/index.html
+              sudo systemctl restart nginx
+            displayName: Deploy Website
