@@ -1,9 +1,6 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
-
 stages:
 - stage: Deploy
   jobs:
@@ -18,6 +15,72 @@ stages:
         deploy:
           steps:
           - script: |
-              echo '<h1>Hello from Azure DevOps VM Deployment</h1>' | sudo tee /var/www/html/index.html
+              sudo bash -c 'cat > /var/www/html/index.html <<EOF
+              <!DOCTYPE html>
+              <html>
+              <head>
+                  <title>Welcome Sattu VM</title>
+                  <style>
+                      * {
+                          margin: 0;
+                          padding: 0;
+                          box-sizing: border-box;
+                          font-family: Arial, sans-serif;
+                      }
+
+                      body {
+                          height: 100vh;
+                          display: flex;
+                          justify-content: center;
+                          align-items: center;
+                          background: linear-gradient(135deg,#667eea,#764ba2);
+                          overflow: hidden;
+                      }
+
+                      .card {
+                          background: rgba(255,255,255,0.15);
+                          backdrop-filter: blur(10px);
+                          padding: 40px;
+                          border-radius: 20px;
+                          text-align: center;
+                          color: white;
+                          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                          animation: float 3s ease-in-out infinite;
+                      }
+
+                      h1 {
+                          font-size: 48px;
+                          margin-bottom: 15px;
+                      }
+
+                      p {
+                          font-size: 20px;
+                          margin-bottom: 20px;
+                      }
+
+                      .rocket {
+                          font-size: 80px;
+                      }
+
+                      @keyframes float {
+                          0% { transform: translateY(0px); }
+                          50% { transform: translateY(-15px); }
+                          100% { transform: translateY(0px); }
+                      }
+                  </style>
+              </head>
+              <body>
+                  <div class="card">
+                      <div class="rocket">🚀</div>
+                      <h1>Welcome Sattu VM</h1>
+                      <p>Successfully Deployed via Azure DevOps CI/CD Pipeline</p>
+                      <h3>GitHub → Azure DevOps → Ubuntu VM → Nginx</h3>
+                      <br>
+                      <p>Deployment Status: ✅ SUCCESS</p>
+                  </div>
+              </body>
+              </html>
+              EOF'
+
               sudo systemctl restart nginx
-            displayName: Deploy Website
+            displayName: "Deploy Fancy Website"
