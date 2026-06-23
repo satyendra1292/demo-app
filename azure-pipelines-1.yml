@@ -1,0 +1,24 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+
+- stage: Deploy
+  jobs:
+  - deployment: DeployToVM
+
+    environment:
+      name: prod-vm
+      resourceName: vmnew
+      resourceType: virtualMachine
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+
+          - script: |
+              echo "<h1>Hello from Azure DevOps
